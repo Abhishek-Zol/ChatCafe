@@ -34,7 +34,7 @@ See when someone is typing in the chat room.
 **Frontend:**
 - React
 - Vite
-- Tailwind CSS + DaisyUI
+- Tailwind CSS + Lucide
 - Socket.IO Client
 
 **Backend:**
