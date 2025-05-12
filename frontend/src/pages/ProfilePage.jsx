@@ -7,24 +7,40 @@ const ProfilePage = () => {
   const [selectedImg, setSelectedImg] = useState(null);
 
   const handleImageUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  const file = e.target.files[0];
+  if (!file) return;
 
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
+  // Validate file type
+  if (!file.type.startsWith("image/")) {
+    alert("Please upload a valid image file.");
+    return;
+  }
 
-    reader.onload = async () => {
-      const base64Image = reader.result; 
-      setSelectedImg(base64Image);
-      console.log("Base64 Image:", base64Image); // Log the base64 image string
-      console.log(file);
-      try {
-        await updateProfile({ profilePic: base64Image });
-      } catch (err) {
-        console.error("Upload failed:", err);
-      }
-    };
+  // Validate file size (< 5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    alert("Image size should be under 5MB.");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+
+  reader.onload = async () => {
+    const base64Image = reader.result;
+    setSelectedImg(base64Image);
+    try {
+      await updateProfile({ profilePic: base64Image });
+    } catch (err) {
+      console.error("Upload failed:", err);
+      alert("Failed to update profile picture. Please try again.");
+    }
   };
+
+  reader.onerror = () => {
+    console.error("Failed to read the file.");
+    alert("Failed to read the image file.");
+  };
+};
 
   return (
     <div className="h-screen pt-20">
